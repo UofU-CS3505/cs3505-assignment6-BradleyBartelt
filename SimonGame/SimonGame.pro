@@ -10,10 +10,14 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    model.cpp \
+    mytimer.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    model.h \
+    mytimer.h
 
 FORMS += \
     mainwindow.ui
