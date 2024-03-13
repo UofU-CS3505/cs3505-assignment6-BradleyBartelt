@@ -16,6 +16,10 @@ private:
     void startGame();
     void emitColor(char);
     void endGame();
+    void displaySequence();
+    void computerRed();
+    void computerBlue();
+    int lengthOfSequence;
     int currentInputs;
 public slots:
     /// handler for the blueButton event. Changes the color of the button to blue, as well as, checks if that was correct move.

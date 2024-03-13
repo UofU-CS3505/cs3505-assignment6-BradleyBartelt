@@ -22,7 +22,6 @@ void Model::blueGrey() {
     emitColor('g');
 }
 void Model::startPressed(){
-   emit redBlueOn(false);
    emit startOn(false);
    emitColor('g');
    startGame();
@@ -40,19 +39,25 @@ void Model::redGrey() {
     emitColor('g');
 }
 void Model::startGame(){
-    colorCombo.clear();
     playerCombo.clear();
+    colorCombo.clear();
+    lengthOfSequence = 3;
     currentInputs = 0;
+    emit startOn(false);
+    emit redBlueOn(false);
     for(int i = 0; i < 20; i++){
         colorCombo.push_back(arc4random() % 2);
     }
-    for(int i = 0; i < 3; i++){
+    displaySequence();
+}
+void Model::displaySequence(){
+    for(int i = 0; i < lengthOfSequence; i++){
         int waitTime = i * 1000;
         if(colorCombo.at(i)){
-            QTimer::singleShot(waitTime, this, &Model::bluePressed);
+            QTimer::singleShot(waitTime, this, &Model::computerBlue);
         }
         else{
-            QTimer::singleShot(waitTime, this, &Model::redPressed);
+            QTimer::singleShot(waitTime, this, &Model::computerRed);
         }
     }
 }
@@ -61,13 +66,11 @@ void Model::emitColor(char color){
         currentInputs++;
         emit changeColorRed(QString("QPushButton {background-color: rgb(220,20,60);}"
                                     " QPushButton:pressed {background-color: rgb(220,20,60);}"));
-        std::cout<< currentInputs << std::endl;
     }
     else if(color == 'b'){
         currentInputs++;
         emit changeColorBlue(QString("QPushButton {background-color: rgb(0,191,255);}"
                                      " QPushButton:pressed {background-color: rgb(0,191,255);}"));
-        std::cout<< currentInputs << std::endl;
     }
     else if(color == 'g'){
         emit changeColorBlue(QString("QPushButton {background-color: rgb(128,128,128);}"
@@ -75,14 +78,27 @@ void Model::emitColor(char color){
         emit changeColorRed(QString("QPushButton {background-color: rgb(128,128,128);}"
                                     " QPushButton:pressed {background-color: rgb(128,128,128);}"));
     }
-    if(currentInputs == 3){
-        playerCombo.clear();
+    if(currentInputs == lengthOfSequence){
         emit redBlueOn(true);
+    }
+    if(int(playerCombo.size()) == lengthOfSequence){
+        playerCombo.clear();
         currentInputs = 0;
+        lengthOfSequence++;
+        emit redBlueOn(false);
+        QTimer::singleShot(1500, this, &Model::displaySequence);
     }
 }
 void Model::endGame(){
     emit startOn(true);
     emit redBlueOn(false);
+}
+void Model::computerRed(){
+    emitColor('r');
+    QTimer::singleShot(300, this, &Model::redGrey);
+}
+void Model::computerBlue(){
+    emitColor('b');
+    QTimer::singleShot(300, this, &Model::blueGrey);
 }
 

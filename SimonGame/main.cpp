@@ -12,5 +12,6 @@ int main(int argc, char *argv[])
     Model model;
     MainWindow w(model);
     w.show();
+    emit model.redBlueOn(false);
     return a.exec();
 }
