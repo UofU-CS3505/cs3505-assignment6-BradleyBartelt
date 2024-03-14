@@ -13,5 +13,7 @@ int main(int argc, char *argv[])
     MainWindow w(model);
     w.show();
     emit model.redBlueOn(false);
+    emit model.updateProgressValue(0);
+    emit model.loseMessage(false);
     return a.exec();
 }

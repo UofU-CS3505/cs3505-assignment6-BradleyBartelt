@@ -18,6 +18,18 @@ MainWindow::MainWindow(Model& model,QWidget *parent): QMainWindow(parent), ui(ne
             &model,
             &Model::startPressed);
     connect(&model,
+            &Model::updateProgressValue,
+            ui->progressBar,
+            &QProgressBar::setValue);
+    connect(&model,
+            &Model::updateProgressMinimum,
+            ui->progressBar,
+            &QProgressBar::setMinimum);
+    connect(&model,
+            &Model::updateProgressMaximum,
+            ui->progressBar,
+            &QProgressBar::setMaximum);
+    connect(&model,
             &Model::changeColorBlue,
             ui->blueButton,
             &QPushButton::setStyleSheet);
@@ -37,6 +49,12 @@ MainWindow::MainWindow(Model& model,QWidget *parent): QMainWindow(parent), ui(ne
             &Model::startOn,
             ui->startButton,
             &QPushButton::setEnabled);
+    connect(&model,
+            &Model::loseMessage,
+            ui->youLoseLabel,
+            &QPushButton::setVisible);
+
+
 }
 
 MainWindow::~MainWindow()

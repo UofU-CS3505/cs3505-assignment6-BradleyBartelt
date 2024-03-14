@@ -21,6 +21,7 @@ private:
     void computerBlue();
     int lengthOfSequence;
     int currentInputs;
+    int speedup;
 public slots:
     /// handler for the blueButton event. Changes the color of the button to blue, as well as, checks if that was correct move.
     void bluePressed();
@@ -42,6 +43,10 @@ signals:
     void redBlueOn(bool);
     /// tells view to diasble or enable the start button
     void startOn(bool);
+    void updateProgressValue(int);
+    void updateProgressMinimum(int);
+    void updateProgressMaximum(int);
+    void loseMessage(bool);
 };
 
 #endif // MODEL_H

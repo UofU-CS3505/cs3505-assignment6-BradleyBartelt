@@ -4,7 +4,10 @@
 #include "model.h"
 #include "mytimer.h"
 #include <vector>
-#include <iostream>
+
+//TODO:
+// speed up as more moves are added
+// creative feature, and good visuals
 
 Model::Model(QObject *parent) : QObject(parent) {
 
@@ -16,13 +19,16 @@ void Model::bluePressed() {
         return;
     }
     emitColor('b');
-    QTimer::singleShot(300, this, &Model::blueGrey);
+    emit updateProgressValue(currentInputs);
+    QTimer::singleShot(150, this, &Model::blueGrey);
 }
 void Model::blueGrey() {
     emitColor('g');
 }
 void Model::startPressed(){
    emit startOn(false);
+   lengthOfSequence = 3;
+   currentInputs = 0;
    emitColor('g');
    startGame();
 }
@@ -33,26 +39,33 @@ void Model::redPressed() {
         return;
     }
     emitColor('r');
-    QTimer::singleShot(300, this, &Model::redGrey);
+    emit updateProgressValue(currentInputs);
+    QTimer::singleShot(150, this, &Model::redGrey);
 }
 void Model::redGrey() {
     emitColor('g');
 }
 void Model::startGame(){
-    playerCombo.clear();
-    colorCombo.clear();
+    emit loseMessage(false);
+    emit startOn(false);
+    emit updateProgressMinimum(0);
+    emit updateProgressValue(0);
+    speedup = 0;
     lengthOfSequence = 3;
     currentInputs = 0;
-    emit startOn(false);
-    emit redBlueOn(false);
-    for(int i = 0; i < 20; i++){
+    for(int i = 0; i < 100; i++){
         colorCombo.push_back(arc4random() % 2);
     }
     displaySequence();
 }
 void Model::displaySequence(){
+    emit updateProgressMaximum(lengthOfSequence);
+    if(speedup < 600)
+        speedup = (lengthOfSequence - 3) * 100;
+    int waitTime = 0;
     for(int i = 0; i < lengthOfSequence; i++){
-        int waitTime = i * 1000;
+        if(i > 0)
+            waitTime = i * (1000 - speedup);
         if(colorCombo.at(i)){
             QTimer::singleShot(waitTime, this, &Model::computerBlue);
         }
@@ -80,6 +93,7 @@ void Model::emitColor(char color){
     }
     if(currentInputs == lengthOfSequence){
         emit redBlueOn(true);
+        currentInputs = 0;
     }
     if(int(playerCombo.size()) == lengthOfSequence){
         playerCombo.clear();
@@ -90,8 +104,13 @@ void Model::emitColor(char color){
     }
 }
 void Model::endGame(){
+    emit loseMessage(true);
     emit startOn(true);
     emit redBlueOn(false);
+    playerCombo.clear();
+    colorCombo.clear();
+    lengthOfSequence = 3;
+    currentInputs = 0;
 }
 void Model::computerRed(){
     emitColor('r');
