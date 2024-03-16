@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <vector>
+#include <QAudioOutput>
+#include <QMediaPlayer>
 
 class Model : public QObject
 {
@@ -13,15 +15,23 @@ private:
     /// blue is true, red is false
     std::vector<bool> colorCombo;
     std::vector<bool> playerCombo;
+    /// helper method for when a game is started
     void startGame();
+    /// helper method for the flashing buttons
     void emitColor(char);
+    /// helper method for when the game ends
     void endGame();
+    /// helper method that sets up the game and displays each sequence
     void displaySequence();
+    /// when the computer emits the sequence, lights up the buttons and adds a delay
     void computerRed();
     void computerBlue();
+    /// decides the sound for when a round is won
+    void randomWinSound();
     int lengthOfSequence;
     int currentInputs;
     int speedup;
+    int randomNum;
 public slots:
     /// handler for the blueButton event. Changes the color of the button to blue, as well as, checks if that was correct move.
     void bluePressed();
@@ -43,10 +53,16 @@ signals:
     void redBlueOn(bool);
     /// tells view to diasble or enable the start button
     void startOn(bool);
+    /// updaters for the progress bar
     void updateProgressValue(int);
     void updateProgressMinimum(int);
     void updateProgressMaximum(int);
+    /// enables and disables the lose label
     void loseMessage(bool);
+    /// plays sound effects
+    void soundEffect();
+    /// changes the media source
+    void changeSound(QUrl);
 };
 
 #endif // MODEL_H

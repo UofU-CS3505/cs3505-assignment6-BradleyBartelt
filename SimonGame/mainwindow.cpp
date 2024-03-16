@@ -1,10 +1,16 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "model.h"
+#include <QMediaPlayer>
+#include <QAudioOutput>
 
 MainWindow::MainWindow(Model& model,QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    player = new QMediaPlayer;
+    audioOutput = new QAudioOutput;
+    player->setAudioOutput(audioOutput);
+    audioOutput->setVolume(15);
     connect(ui->blueButton,
             &QPushButton::clicked,
             &model,
@@ -17,6 +23,14 @@ MainWindow::MainWindow(Model& model,QWidget *parent): QMainWindow(parent), ui(ne
             &QPushButton::clicked,
             &model,
             &Model::startPressed);
+    connect(&model,
+            &Model::soundEffect,
+            player,
+            &QMediaPlayer::play);
+    connect(&model,
+            &Model::changeSound,
+            player,
+            &QMediaPlayer::setSource);
     connect(&model,
             &Model::updateProgressValue,
             ui->progressBar,
@@ -53,11 +67,10 @@ MainWindow::MainWindow(Model& model,QWidget *parent): QMainWindow(parent), ui(ne
             &Model::loseMessage,
             ui->youLoseLabel,
             &QPushButton::setVisible);
-
-
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete player;
 }

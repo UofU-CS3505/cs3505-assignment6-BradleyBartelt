@@ -4,10 +4,8 @@
 #include "model.h"
 #include "mytimer.h"
 #include <vector>
-
-//TODO:
-// speed up as more moves are added
-// creative feature, and good visuals
+#include <QAudioOutput>
+#include <QMediaPlayer>
 
 Model::Model(QObject *parent) : QObject(parent) {
 
@@ -34,7 +32,7 @@ void Model::startPressed(){
 }
 void Model::redPressed() {
     playerCombo.push_back(false);
-    if(playerCombo.back() != colorCombo.at(playerCombo.size() - 1)){
+    if(playerCombo.back() != colorCombo.at(playerCombo.size() - 1)){ /// if the player sequence and computer sequence arent the same end the game
         endGame();
         return;
     }
@@ -48,12 +46,14 @@ void Model::redGrey() {
 void Model::startGame(){
     emit loseMessage(false);
     emit startOn(false);
+    emit changeSound(QUrl("qrc:/Sounds/start_sound.mp3"));
+    emit soundEffect();
     emit updateProgressMinimum(0);
     emit updateProgressValue(0);
     speedup = 0;
     lengthOfSequence = 3;
     currentInputs = 0;
-    for(int i = 0; i < 100; i++){
+    for(int i = 0; i < 100; i++){ /// fill sequence list
         colorCombo.push_back(arc4random() % 2);
     }
     displaySequence();
@@ -91,24 +91,27 @@ void Model::emitColor(char color){
         emit changeColorRed(QString("QPushButton {background-color: rgb(128,128,128);}"
                                     " QPushButton:pressed {background-color: rgb(128,128,128);}"));
     }
-    if(currentInputs == lengthOfSequence){
+    if(currentInputs == lengthOfSequence){ /// once the computer sequence ends start the player mode
         emit redBlueOn(true);
         currentInputs = 0;
     }
-    if(int(playerCombo.size()) == lengthOfSequence){
+    if(int(playerCombo.size()) == lengthOfSequence){ /// when the player gets a sequence correct
         playerCombo.clear();
         currentInputs = 0;
+        randomWinSound(); /// play victory sound
         lengthOfSequence++;
-        emit redBlueOn(false);
-        QTimer::singleShot(1500, this, &Model::displaySequence);
+        emit redBlueOn(false); /// lock buttons for computer sequence
+        QTimer::singleShot(1500, this, &Model::displaySequence); /// add a delay before the computer sequence
     }
 }
 void Model::endGame(){
-    emit loseMessage(true);
+    emit loseMessage(true); /// displays the lose message
     emit startOn(true);
-    emit redBlueOn(false);
+    emit redBlueOn(false); /// resets the buttons back to how they are at the start
+    emit changeSound(QUrl("qrc:/Sounds/loss_sound.mp3"));
+    emit soundEffect();
     playerCombo.clear();
-    colorCombo.clear();
+    colorCombo.clear(); /// resets the computer sequence and the player sequence
     lengthOfSequence = 3;
     currentInputs = 0;
 }
@@ -119,5 +122,24 @@ void Model::computerRed(){
 void Model::computerBlue(){
     emitColor('b');
     QTimer::singleShot(300, this, &Model::blueGrey);
+}
+void Model::randomWinSound(){
+    randomNum = (arc4random() % 4);
+    if(randomNum == 0){
+        emit changeSound(QUrl("qrc:/Sounds/alright.mp3"));
+        emit soundEffect();
+    }
+    else if(randomNum == 1){
+        emit changeSound(QUrl("qrc:/Sounds/got_it.mp3"));
+        emit soundEffect();
+    }
+    else if(randomNum == 2){
+        emit changeSound(QUrl("qrc:/Sounds/nailed_it.mp3"));
+        emit soundEffect();
+    }
+    else{
+        emit changeSound(QUrl("qrc:/Sounds/unbeliveable.mp3"));
+        emit soundEffect();
+    }
 }
 

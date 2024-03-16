@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include "model.h"
+#include <QMediaPlayer>
+#include <QAudioOutput>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -20,5 +22,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    QMediaPlayer* player;
+    QAudioOutput* audioOutput;
 };
 #endif // MAINWINDOW_H
