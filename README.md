@@ -9,6 +9,7 @@ Our game plays audio sound effects when a sequence is completed, and when you st
 The audio that plays is loud so be careful with headphones especially. The volume change setting didn't seem to be working for us.
 
 ## Warning: 
-This project reqiures the instillation of the Qt Multimedia component that corresponds with 6.6.2
+This project reqiures the instillation of the Qt Multimedia component that corresponds with 6.6.2.
+You must go into Qt maintenance tool to download this component.
 ![image](https://github.com/UofU-CS3505/cs3505-assignment6-BradleyBartelt/assets/70968645/097a39ba-7c27-44c9-a566-60c909465678)
 
