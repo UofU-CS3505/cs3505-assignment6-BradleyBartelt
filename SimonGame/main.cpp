@@ -7,7 +7,7 @@
  * Github Usernames: Isaac-Hall1 and BradleyBartelt
  * Github link: https://github.com/UofU-CS3505/cs3505-assignment6-BradleyBartelt
  * Creative Idea: We added sound effects whenever the game started, was lost, and 4 random sound effects
- * for when the player wins each turn.
+ * for when the player wins each turn. This was acomplished by
  */
 int main(int argc, char *argv[])
 {

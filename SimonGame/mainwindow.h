@@ -22,6 +22,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    //added a player and audio output for our sound effects
     QMediaPlayer* player;
     QAudioOutput* audioOutput;
 };

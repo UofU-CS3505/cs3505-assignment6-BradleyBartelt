@@ -6,14 +6,19 @@
 #include <vector>
 #include <QAudioOutput>
 #include <QMediaPlayer>
-#include <iostream>
 #include<ctime>
+
+///
+/// \brief Model controls the game logic, by reciving inputs from the view, the model tells the view what buttons to flash, if the player has won or lost,
+/// and anything else reated to the logic of the game.
+/// \param parent
+///
 Model::Model(QObject *parent) : QObject(parent) {
 
 }
 void Model::bluePressed() {
     playerCombo.push_back(true);
-    if(playerCombo.back() != colorCombo.at(playerCombo.size() - 1)){
+    if(playerCombo.back() != colorCombo.at(playerCombo.size() - 1)){ // if the player sequence and computer sequence arent the same end the game
         endGame();
         return;
     }
@@ -33,7 +38,7 @@ void Model::startPressed(){
 }
 void Model::redPressed() {
     playerCombo.push_back(false);
-    if(playerCombo.back() != colorCombo.at(playerCombo.size() - 1)){ /// if the player sequence and computer sequence arent the same end the game
+    if(playerCombo.back() != colorCombo.at(playerCombo.size() - 1)){ // if the player sequence and computer sequence arent the same end the game
         endGame();
         return;
     }
@@ -55,21 +60,20 @@ void Model::startGame(){
     lengthOfSequence = 3;
     currentInputs = 0;
     srand(time(0));
-    for(int i = 0; i < 100; i++){ /// fill sequence list
-        int randomN = rand() % 2;
-        colorCombo.push_back(randomN);
-        std::cout << randomN << std::endl;
+    for(int i = 0; i < 100; i++){ // fill sequence list with red or blue inputs up to 100
+        randomNum = rand() % 2;
+        colorCombo.push_back(randomNum);
     }
     displaySequence();
 }
 void Model::displaySequence(){
-    emit updateProgressMaximum(lengthOfSequence);
-    if(speedup < 600)
+    emit updateProgressMaximum(lengthOfSequence); //resets progress bar to 0 and changes the maximum value it can show
+    if(speedup < 600) //stop speedup up the game if we've reached a threshold
         speedup = (lengthOfSequence - 3) * 100;
     int waitTime = 0;
     for(int i = 0; i < lengthOfSequence; i++){
         if(i > 0)
-            waitTime = i * (1000 - speedup);
+            waitTime = i * (1000 - speedup); //time in between button flashes
         if(colorCombo.at(i)){
             QTimer::singleShot(waitTime, this, &Model::computerBlue);
         }
@@ -95,27 +99,27 @@ void Model::emitColor(char color){
         emit changeColorRed(QString("QPushButton {background-color: rgb(128,128,128);}"
                                     " QPushButton:pressed {background-color: rgb(128,128,128);}"));
     }
-    if(currentInputs == lengthOfSequence){ /// once the computer sequence ends start the player mode
+    if(currentInputs == lengthOfSequence){ // once the computer sequence ends allow player to enter in the sequence
         emit redBlueOn(true);
         currentInputs = 0;
     }
-    if(int(playerCombo.size()) == lengthOfSequence){ /// when the player gets a sequence correct
+    if(int(playerCombo.size()) == lengthOfSequence){ // when the player gets a sequence correct
         playerCombo.clear();
         currentInputs = 0;
-        randomWinSound(); /// play victory sound
+        randomWinSound(); // play victory sound
         lengthOfSequence++;
-        emit redBlueOn(false); /// lock buttons for computer sequence
-        QTimer::singleShot(1500, this, &Model::displaySequence); /// add a delay before the computer sequence
+        emit redBlueOn(false); // lock buttons for computer sequence
+        QTimer::singleShot(1500, this, &Model::displaySequence); // add a delay before the computer sequence
     }
 }
 void Model::endGame(){
-    emit loseMessage(true); /// displays the lose message
+    emit loseMessage(true); // displays the lose message
     emit startOn(true);
-    emit redBlueOn(false); /// resets the buttons back to how they are at the start
+    emit redBlueOn(false); // resets the buttons back to how they are at the start
     emit changeSound(QUrl("qrc:/Sounds/loss_sound.mp3"));
     emit soundEffect();
     playerCombo.clear();
-    colorCombo.clear(); /// resets the computer sequence and the player sequence
+    colorCombo.clear(); // resets the computer sequence and the player sequence
     lengthOfSequence = 3;
     currentInputs = 0;
 }

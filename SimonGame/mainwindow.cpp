@@ -4,6 +4,11 @@
 #include <QMediaPlayer>
 #include <QAudioOutput>
 
+///
+/// \brief Main window connects all the signals to slots, allowing our front end and back end to communicate with eachother.
+/// \param model
+/// \param parent
+///
 MainWindow::MainWindow(Model& model,QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
