@@ -5,6 +5,8 @@ Authors: Bradley Bartelt and Isaac Hall
 
 ## Special Feature: 
 Our game plays audio sound effects when a sequence is completed, and when you start or lose a game. This is acomplished through the QT Multimedia player.
+### Discalimer
+The audio that plays is loud so be careful with headphones especially. The volume change setting didn't seem to be working for us.
 
 ## Warning: 
 This project reqiures the instillation of the Qt Multimedia component that corresponds with 6.6.2
