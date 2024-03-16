@@ -6,7 +6,8 @@
 #include <vector>
 #include <QAudioOutput>
 #include <QMediaPlayer>
-
+#include <iostream>
+#include<ctime>
 Model::Model(QObject *parent) : QObject(parent) {
 
 }
@@ -53,8 +54,11 @@ void Model::startGame(){
     speedup = 0;
     lengthOfSequence = 3;
     currentInputs = 0;
+    srand(time(0));
     for(int i = 0; i < 100; i++){ /// fill sequence list
-        colorCombo.push_back(arc4random() % 2);
+        int randomN = rand() % 2;
+        colorCombo.push_back(randomN);
+        std::cout << randomN << std::endl;
     }
     displaySequence();
 }
@@ -124,7 +128,7 @@ void Model::computerBlue(){
     QTimer::singleShot(300, this, &Model::blueGrey);
 }
 void Model::randomWinSound(){
-    randomNum = (arc4random() % 4);
+    randomNum = (rand() % 4);
     if(randomNum == 0){
         emit changeSound(QUrl("qrc:/Sounds/alright.mp3"));
         emit soundEffect();
